@@ -202,33 +202,66 @@
 })();
 
 
-/* ── 5. Support Form → Mailto ──────────────────────────────── */
+/* ── 5. Support Form → Cloudflare Worker (with fallback) ── */
 (function initSupportForm() {
   const form = document.querySelector('.js-support-form');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  const statusEl = form.querySelector('.js-form-status');
+  const submitBtn = form.querySelector('.js-submit-btn');
+  const submitText = submitBtn ? submitBtn.querySelector('span') : null;
+
+  // Endpoint for our Cloudflare Worker
+  const WORKER_ENDPOINT = 'https://trigemeo-contact.cgtailor.workers.dev'; // or custom route
+
+  function setStatus(type, message) {
+    if (!statusEl) return;
+    statusEl.style.display = 'block';
+    statusEl.className = `form__status js-form-status notice-box ${type === 'success' ? 'notice-box--success' : 'notice-box--error'}`;
+    statusEl.innerHTML = message;
+  }
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const name    = (form.querySelector('[name="name"]')?.value    || '').trim();
-    const email   = (form.querySelector('[name="email"]')?.value   || '').trim();
-    const product = (form.querySelector('[name="product"]')?.value || '').trim();
-    const message = (form.querySelector('[name="message"]')?.value || '').trim();
+    const name      = (form.querySelector('[name="name"]')?.value      || '').trim();
+    const email     = (form.querySelector('[name="email"]')?.value     || '').trim();
+    const product   = (form.querySelector('[name="product"]')?.value   || '').trim();
+    const message   = (form.querySelector('[name="message"]')?.value   || '').trim();
+    const _honeypot = (form.querySelector('[name="_honeypot"]')?.value || '').trim();
 
     if (!email || !message) {
-      alert('Please fill in Email and Message fields.');
+      setStatus('error', '⚠️ Please fill in both your Email and Message.');
       return;
     }
 
-    const subject = encodeURIComponent(
-      product ? `[${product}] Support Request from ${name || 'User'}` : `Support Request from ${name || 'User'}`
-    );
+    if (submitBtn) submitBtn.disabled = true;
+    if (submitText) submitText.textContent = 'Sending…';
 
-    const body = encodeURIComponent(
-      `Name: ${name || '—'}\nEmail: ${email}\nProduct: ${product || '—'}\n\n${message}`
-    );
+    try {
+      const response = await fetch(WORKER_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, product, message, _honeypot }),
+      });
 
-    window.location.href = `mailto:support@trigemeo.com?subject=${subject}&body=${body}`;
+      if (response.ok) {
+        setStatus('success', '✓ <strong>Thank you!</strong> Your message has been sent successfully. We will reply to your email within 24–48 hours.');
+        form.reset();
+      } else {
+        throw new Error('Server returned ' + response.status);
+      }
+    } catch (err) {
+      // Fallback: If worker is not yet deployed or network fails, offer instant mailto link
+      const subject = encodeURIComponent(product ? `[${product}] Support Request from ${name || 'User'}` : `Support Request from ${name || 'User'}`);
+      const body = encodeURIComponent(`Name: ${name || '—'}\nEmail: ${email}\nProduct: ${product || '—'}\n\n${message}`);
+      const mailtoUrl = `mailto:support@trigemeo.com?subject=${subject}&body=${body}`;
+
+      setStatus('error', `Could not dispatch automatically. <a href="${mailtoUrl}" class="text-accent" style="text-decoration: underline;">Click here to send directly via email client</a> or email us at <strong>support@trigemeo.com</strong>.`);
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+      if (submitText) submitText.textContent = 'Send Message';
+    }
   });
 })();
 
