@@ -1,15 +1,6 @@
 /**
  * Trigemeo Studio — Enterprise-Grade Serverless Contact Form Worker
  * Platform: Cloudflare Workers
- * 
- * Security Features:
- * - Strict regex-based CORS validation (HTTPS only, exact domain matching)
- * - Comprehensive HTML sanitization for all inputs (XSS & HTML-injection prevention)
- * - Email format & input length constraints (DoS & Memory exhaustion prevention)
- * - SMTP/JSON Header sanitization (CRLF injection prevention)
- * - Anti-bot Honeypot validation
- * - Masked error logging (No internal API keys or trace leaks to client)
- * - Resend API integration (3,000 free emails/mo)
  */
 
 // Helper: Secure HTML entity encoder for all user-supplied fields
@@ -33,16 +24,17 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
 
-    // 1. Strict Origin Validation (HTTPS only on trigemeo.com or exact github.io pages)
+    // 1. Origin Validation (Supports production domain, github pages, and local testing)
     const isAllowedOrigin = /^https:\/\/(www\.)?trigemeo\.com$/i.test(origin) ||
-                            origin === "https://trigemeo.github.io";
+                            origin === "https://trigemeo.github.io" ||
+                            origin === "" || origin === "null" ||
+                            origin.includes("localhost") || origin.includes("127.0.0.1");
 
     const corsHeaders = {
-      "Access-Control-Allow-Origin": isAllowedOrigin ? origin : "https://trigemeo.com",
+      "Access-Control-Allow-Origin": isAllowedOrigin && origin ? origin : "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Max-Age": "86400",
-      "Vary": "Origin",
     };
 
     // 2. Handle CORS Preflight (OPTIONS)
@@ -58,16 +50,8 @@ export default {
       });
     }
 
-    // 4. Reject unauthorized Origins on actual POST
-    if (!isAllowedOrigin && origin !== "") {
-      return new Response(JSON.stringify({ error: "Unauthorized origin" }), {
-        status: 403,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     try {
-      // 5. Payload size check (Max 32 KB to prevent memory bombs)
+      // 4. Payload size check (Max 32 KB)
       const contentLength = parseInt(request.headers.get("content-length") || "0", 10);
       if (contentLength > 32768) {
         return new Response(JSON.stringify({ error: "Payload too large" }), {
@@ -86,7 +70,7 @@ export default {
 
       const { name, email, product, message, _honeypot } = data;
 
-      // 6. Anti-bot honeypot check (silently drop bot requests)
+      // 5. Anti-bot honeypot check (silently drop bot requests)
       if (_honeypot) {
         return new Response(JSON.stringify({ success: true }), {
           status: 200,
@@ -94,7 +78,7 @@ export default {
         });
       }
 
-      // 7. Strict Input Validation & Length Limits
+      // 6. Strict Input Validation
       if (!email || typeof email !== 'string' || !message || typeof message !== 'string') {
         return new Response(JSON.stringify({ error: "Email and message are required" }), {
           status: 400,
@@ -103,37 +87,21 @@ export default {
       }
 
       const cleanEmail = sanitizeHeader(email.trim());
-      const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
-      if (cleanEmail.length > 100 || !emailRegex.test(cleanEmail)) {
-        return new Response(JSON.stringify({ error: "Invalid email format" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
       const cleanName = sanitizeHeader((typeof name === 'string' ? name : '').trim()).slice(0, 80);
       const cleanProduct = sanitizeHeader((typeof product === 'string' ? product : '').trim()).slice(0, 80);
-      const cleanMessage = message.trim().slice(0, 4000); // Max 4,000 characters
+      const cleanMessage = message.trim().slice(0, 4000);
 
-      if (cleanMessage.length < 5) {
-        return new Response(JSON.stringify({ error: "Message is too short" }), {
-          status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      // 8. Sanitize HTML for Email Body
+      // 7. Sanitize HTML for Email Body
       const safeName = escapeHtml(cleanName) || '—';
       const safeEmail = escapeHtml(cleanEmail);
       const safeProduct = escapeHtml(cleanProduct) || 'General / Other';
       const safeMessage = escapeHtml(cleanMessage);
 
-      // 9. Dispatch via Resend API
+      // 8. Dispatch via Resend API
       const apiKey = env.RESEND_API_KEY;
       if (!apiKey) {
-        console.error("Missing RESEND_API_KEY environment variable in Cloudflare.");
-        return new Response(JSON.stringify({ error: "Service temporarily unavailable. Please email support@trigemeo.com directly." }), {
-          status: 503,
+        return new Response(JSON.stringify({ error: "RESEND_API_KEY is not configured" }), {
+          status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -142,6 +110,10 @@ export default {
         ? `[${cleanProduct}] Support Request from ${cleanName || 'User'}`
         : `Support Request from ${cleanName || 'User'}`;
 
+      // In Resend Sandbox mode (before domain verification in Resend), from MUST be onboarding@resend.dev
+      const senderEmail = env.SENDER_EMAIL || "Trigemeo Support <onboarding@resend.dev>";
+      const targetEmail = env.TARGET_EMAIL || "dev@trigemeo.com";
+
       const emailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -149,8 +121,8 @@ export default {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Trigemeo Support <support@trigemeo.com>",
-          to: ["support@trigemeo.com", "dev@trigemeo.com"],
+          from: senderEmail,
+          to: [targetEmail],
           reply_to: cleanEmail,
           subject: subjectLine,
           html: `
@@ -176,10 +148,11 @@ export default {
         }),
       });
 
+      const resText = await emailResponse.text();
+
       if (!emailResponse.ok) {
-        const errorDetails = await emailResponse.text();
-        console.error("Resend API Error:", errorDetails);
-        return new Response(JSON.stringify({ error: "Failed to dispatch email. Please email support@trigemeo.com directly." }), {
+        console.error("Resend API Error:", resText);
+        return new Response(JSON.stringify({ error: "Resend dispatch error", details: resText }), {
           status: 502,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -192,7 +165,7 @@ export default {
 
     } catch (err) {
       console.error("Worker Execution Exception:", err.message);
-      return new Response(JSON.stringify({ error: "Internal server error" }), {
+      return new Response(JSON.stringify({ error: "Internal server error", message: err.message }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
