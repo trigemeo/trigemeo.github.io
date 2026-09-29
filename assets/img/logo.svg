@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 112" width="120" height="112" role="img" aria-label="Trigemeo Studio logo">
+  <defs>
+    <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <filter id="glow" x="-15%" y="-15%" width="130%" height="130%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!--
+    Equilateral triangle subdivided into 4 equal equilateral triangles.
+    Outer vertices: A(60,6)  B(114,106)  C(6,106)
+    Midpoints:      M_AB(87,56)  M_BC(60,106)  M_AC(33,56)
+    4 triangles:
+      top         A(60,6)    M_AB(87,56)  M_AC(33,56)
+      bottom-left M_AC(33,56) M_BC(60,106) C(6,106)
+      bottom-right M_AB(87,56) B(114,106) M_BC(60,106)
+      center-inv  M_AB(87,56) M_BC(60,106) M_AC(33,56)  ← inverted
+  -->
+
+  <!-- Outer frame -->
+  <polygon points="60,6 114,106 6,106"
+           fill="none"
+           stroke="url(#neonGrad)" stroke-width="2.5"
+           stroke-linejoin="round"
+           filter="url(#glow)"/>
+
+  <!-- Top sub-triangle -->
+  <polygon points="60,6 87,56 33,56"
+           fill="rgba(6,182,212,0.06)"
+           stroke="url(#neonGrad)" stroke-width="1.6"
+           stroke-linejoin="round"/>
+
+  <!-- Bottom-left sub-triangle -->
+  <polygon points="33,56 60,106 6,106"
+           fill="rgba(99,102,241,0.06)"
+           stroke="url(#neonGrad)" stroke-width="1.6"
+           stroke-linejoin="round"/>
+
+  <!-- Bottom-right sub-triangle -->
+  <polygon points="87,56 114,106 60,106"
+           fill="rgba(99,102,241,0.06)"
+           stroke="url(#neonGrad)" stroke-width="1.6"
+           stroke-linejoin="round"/>
+
+  <!-- Centre inverted triangle — filled accent -->
+  <polygon points="87,56 60,106 33,56"
+           fill="url(#neonGrad)"
+           opacity="0.25"
+           stroke="url(#neonGrad)" stroke-width="1.6"
+           stroke-linejoin="round"
+           filter="url(#glow)"/>
+</svg>

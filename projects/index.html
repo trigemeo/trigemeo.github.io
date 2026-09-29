@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Our Games &amp; Apps — Trigemeo Studio</title>
+  <meta name="description" content="Explore the Trigemeo portfolio: Brandub viking board game, Portuguese with Bernie, spatial puzzles, AI marketplace tools, and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://trigemeo.com/projects/">
+
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://trigemeo.com/projects/">
+  <meta property="og:title"       content="Our Games &amp; Apps — Trigemeo Studio">
+  <meta property="og:description" content="Explore the Trigemeo portfolio: Brandub viking board game, Portuguese with Bernie, spatial puzzles, AI marketplace tools, and more.">
+  <meta property="og:site_name"   content="Trigemeo Studio">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="../assets/img/logo.svg" type="image/svg+xml">
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo" aria-label="Trigemeo Studio — Home">
+        <img src="../assets/img/logo.svg" alt="" class="nav__logo-img" width="32" height="32">
+        Trigemeo
+      </a>
+      <ul class="nav__links" role="list">
+        <li><a href="/">Home</a></li>
+        <li><a href="/projects/" aria-current="page">Projects</a></li>
+        <li><a href="/support/">Support</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
+        <span class="nav__burger-line"></span>
+        <span class="nav__burger-line"></span>
+        <span class="nav__burger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ── Page Header ── -->
+    <div class="page-header">
+      <div class="container">
+        <span class="section__eyebrow">Our Work</span>
+        <h1 class="page-header__title">All Projects</h1>
+        <p class="page-header__subtitle">
+          Games built with craft, apps built with purpose. Filter by category below.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Projects ── -->
+    <section class="section" aria-labelledby="projects-heading">
+      <div class="container">
+        <h2 class="sr-only" id="projects-heading">Project catalog</h2>
+
+        <!-- Filter Tabs -->
+        <div class="tabs" role="tablist" aria-label="Filter projects by category">
+          <button class="tab tab--active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="tab" data-filter="game" role="tab" aria-selected="false">Games</button>
+          <button class="tab" data-filter="app"  role="tab" aria-selected="false">Apps &amp; Tools</button>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid--3" role="list">
+
+          <!-- ──── GAMES ──── -->
+
+          <!-- Brandub -->
+          <article class="card card--cyan project-card" data-category="game" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--cyan" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/><path d="M9 6c-.5 1.5-.5 3 .5 4L8 14h8l-1.5-4c1-1 1-2.5.5-4"/><rect x="6" y="14" width="12" height="2" rx="1"/><path d="M5 20h14M7 16v4M17 16v4"/></svg>
+              </span>
+              <span class="badge badge--coming-soon">Coming Soon</span>
+            </div>
+            <h3 class="card__title">Brandub</h3>
+            <p class="card__subtitle">Ancient Viking &amp; Celtic Strategy Board Game</p>
+            <p class="card__desc">A Tafl-family classic reborn. Hand-carved wooden board, deep asymmetric tactics, atmospheric soundtrack, and the tension of every move. Play solo against AI or challenge friends through Game Center.</p>
+            <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <span class="badge badge--coming-soon">iOS</span>
+              <span class="badge badge--coming-soon">Android</span>
+            </div>
+          </article>
+
+          <!-- Trigemeo -->
+          <article class="card card--indigo project-card" data-category="game" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--indigo" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 20h18L12 3z"/><path d="M12 3v11M7.5 14l4.5-6 4.5 6"/></svg>
+              </span>
+              <span class="badge badge--in-dev">In Development</span>
+            </div>
+            <h3 class="card__title">Trigemeo</h3>
+            <p class="card__subtitle">Innovative Spatial Pyramid Rolling Puzzle</p>
+            <p class="card__desc">The game that named our studio. A one-of-a-kind mechanic — roll 3D pyramids around neighboring faces to build monolithic structures. Three modes: Collapse, Sculptor, and Maze.</p>
+          </article>
+
+          <!-- Sorter -->
+          <article class="card card--indigo project-card" data-category="game" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--indigo" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </span>
+              <span class="badge badge--in-dev">In Development</span>
+            </div>
+            <h3 class="card__title">Sorter</h3>
+            <p class="card__subtitle">Geographic &amp; Cultural Discovery Puzzle</p>
+            <p class="card__desc">A beautiful sorting puzzle about countries, landmarks, and cultural artifacts. Travel the world one tile at a time. Learn while you play. Great for all ages.</p>
+          </article>
+
+          <!-- Rotolock -->
+          <article class="card card--emerald project-card" data-category="game" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--emerald" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><circle cx="12" cy="12" r="7"/></svg>
+              </span>
+              <span class="badge badge--lab">R&amp;D Lab</span>
+            </div>
+            <h3 class="card__title">Rotolock</h3>
+            <p class="card__subtitle">Hardcore Gear &amp; Rotor Lock Cyber-Puzzle</p>
+            <p class="card__desc">Interlocking gears, rotating cylinders, and mechanical locks. A brain-bending puzzle for those who think disassembling a Swiss watch sounds like a good time.</p>
+          </article>
+
+          <!-- ──── APPS ──── -->
+
+          <!-- Portuguese with Bernie -->
+          <article class="card card--amber project-card" data-category="app" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--amber" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg>
+              </span>
+              <span class="badge badge--beta">Beta Soon</span>
+            </div>
+            <h3 class="card__title">Portuguese with Bernie</h3>
+            <p class="card__subtitle">Master European Portuguese with Bernie the Dog</p>
+            <p class="card__desc">Your friendly guide to Português de Portugal. Real-life scenarios — from ordering coffee to filing taxes at Finanças. Audio drills, smart flashcards, and a charming four-legged mascot who never judges your pronunciation.</p>
+          </article>
+
+          <!-- Aukro AI -->
+          <article class="card card--amber project-card" data-category="app" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--amber" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 12h4M12 10v4"/></svg>
+              </span>
+              <span class="badge badge--beta">Beta / Labs</span>
+            </div>
+            <h3 class="card__title">Aukro AI</h3>
+            <p class="card__subtitle">One-Photo AI Listing Generator for Sellers</p>
+            <p class="card__desc">Snap a photo of anything you want to sell. Aukro AI identifies the brand, model, writes a compelling listing, and estimates the market price range. Powered by Google Gemini Vision API.</p>
+          </article>
+
+          <!-- Guitar Chords -->
+          <article class="card card--amber project-card" data-category="app" role="listitem">
+            <div class="card__top">
+              <span class="card__icon card__icon--amber" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              </span>
+              <span class="badge badge--in-dev">In Development</span>
+            </div>
+            <h3 class="card__title">Guitar Chords &amp; Tuner</h3>
+            <p class="card__subtitle">Interactive Chord Toolkit &amp; Tuner for Musicians</p>
+            <p class="card__desc">A pro-grade chord reference with realistic string sounds, a precise built-in tuner, and fretboard variations across all positions. Your pocket guitar companion.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="/" class="footer__logo">
+            <img src="../assets/img/logo.svg" alt="" class="footer__logo-img" width="28" height="28">
+            Trigemeo Studio
+          </a>
+          <p class="footer__tagline">Crafting atmospheric games &amp; sharp digital tools.</p>
+        </div>
+        <div>
+          <p class="footer__nav-title">Navigate</p>
+          <ul class="footer__nav-list" role="list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/support/">Support</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer__nav-title">Legal</p>
+          <ul class="footer__nav-list" role="list">
+            <li><a href="/privacy/">Privacy Policy</a></li>
+            <li><a href="/terms/">Terms of Service</a></li>
+            <li><a href="/support/#delete-data">Data Deletion</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div>
+          <p class="footer__legal">© 2026 Trigemeo. All rights reserved.</p>
+          <p class="footer__legal">Trigemeo brand, games, and IP — Alexandr Ivanov.</p>
+          <p class="footer__legal">Android distribution operated by Freebird s.r.o. | IČO: 27942350 | Bezručova 592, 273 45 Hřebeč, Czech Republic.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
