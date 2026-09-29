@@ -11,14 +11,12 @@
 
 export default {
   async fetch(request, env) {
-    // 1. Handle CORS Preflight (OPTIONS)
+    // 1. Handle CORS Preflight (OPTIONS) — Strict Production Whitelist
     const origin = request.headers.get("Origin") || "";
     const allowedOrigins = [
       "https://trigemeo.com",
       "https://www.trigemeo.com",
-      "https://trigemeo.github.io",
-      "http://localhost:3000",
-      "http://127.0.0.1:5500"
+      "https://trigemeo.github.io"
     ];
 
     const isAllowed = allowedOrigins.includes(origin) || origin.endsWith(".trigemeo.com");
