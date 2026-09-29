@@ -110,9 +110,9 @@ export default {
         ? `[${cleanProduct}] Support Request from ${cleanName || 'User'}`
         : `Support Request from ${cleanName || 'User'}`;
 
-      // In Resend Sandbox mode (before domain verification in Resend), from MUST be onboarding@resend.dev
-      const senderEmail = env.SENDER_EMAIL || "Trigemeo Support <onboarding@resend.dev>";
-      const targetEmail = env.TARGET_EMAIL || "dev@trigemeo.com";
+      // Domain is 100% verified — send from official branded address
+      const senderEmail = env.SENDER_EMAIL || "Trigemeo Support <support@trigemeo.com>";
+      const targetEmail = env.TARGET_EMAIL || "support@trigemeo.com";
 
       const emailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
